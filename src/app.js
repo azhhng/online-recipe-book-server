@@ -27,13 +27,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
 const dotenv = __importStar(require("dotenv"));
 const app = (0, express_1.default)();
-const PORT = 3001;
+// configure .env variables
 dotenv.config();
+// configure cors
+const allowedOrigins = ["http://localhost:3000"];
+const options = {
+    origin: allowedOrigins,
+};
+app.use((0, cors_1.default)(options));
+app.use(express_1.default.json());
+app.get("/test-get", (req, res) => {
+    res.status(200).send("test get success");
+});
 app.use("/", (req, res) => {
     res.send("Hello world!");
 });
-app.listen(PORT, () => {
+app.listen(process.env.PORT_NUMBER, () => {
     console.log("Server is up on port:", process.env.PORT_NUMBER);
 });
