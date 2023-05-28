@@ -24,7 +24,6 @@ const getAllUserRecipeBoxes = async (userId: string) => {
     "SELECT * FROM recipe_box WHERE user_id=$1",
     [userId]
   );
-  console.log(response.rows);
   return response.rows;
 };
 
