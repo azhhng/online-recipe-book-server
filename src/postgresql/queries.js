@@ -31,38 +31,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const cors_1 = __importDefault(require("cors"));
 const dotenv = __importStar(require("dotenv"));
-const userController = require("./controllers/userController");
-const app = (0, express_1.default)();
 // configure .env variables
 dotenv.config();
-// configure cors
-const allowedOrigins = ["http://localhost:3000"];
-const options = {
-    origin: allowedOrigins,
+// configure database
+const Pool = require("pg").Pool;
+const pool = new Pool({
+    user: process.env.POSTGRESQL_USER,
+    host: process.env.POSTGRESQL_HOST,
+    database: process.env.POSTGRESQL_DATABASE,
+    password: process.env.POSTGRESQL_PASSWORD,
+    port: process.env.POSTGRESQL_PORT,
+});
+const getAllUserRecipes = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield pool.query("SELECT * FROM recipe WHERE user_id=$1", [
+        userId,
+    ]);
+    return response.rows;
+});
+const getAllUserRecipeBoxes = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield pool.query("SELECT * FROM recipe_box WHERE user_id=$1", [userId]);
+    console.log(response.rows);
+    return response.rows;
+});
+module.exports = {
+    getAllUserRecipes,
+    getAllUserRecipeBoxes,
 };
-app.use((0, cors_1.default)(options));
-app.use(express_1.default.json());
-app.get("/test-get", (req, res) => {
-    res.status(200).send("test get success");
-});
-app.get("/:user/recipe", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const recipes = yield userController.getAllUserRecipes(req, res);
-    return res.json(recipes);
-}));
-app.get("/:user/recipe-box", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const recipeBoxes = yield userController.getAllUserRecipeBoxes(req, res);
-    return res.json(recipeBoxes);
-}));
-app.use("/", (req, res) => {
-    res.send("Hello world!");
-});
-app.listen(process.env.PORT_NUMBER, () => {
-    console.log("Server is up on port:", process.env.PORT_NUMBER);
-});
