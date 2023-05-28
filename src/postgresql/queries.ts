@@ -39,8 +39,26 @@ const createRecipeBox = async (
   return response.rows;
 };
 
+const createRecipe = async (
+  userId: string,
+  name: string,
+  link: string,
+  description: string,
+  has_made: boolean,
+  favorite: boolean,
+  recipe_box_id: BigInt
+) => {
+  const response = await pool.query(
+    `INSERT INTO "recipe" (recipe_id, user_id, name, link, description, has_made, favorite, recipe_box_id)
+    VALUES (nextval('recipe_id_sequence'), $1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+    [userId, name, link, description, has_made, favorite, recipe_box_id]
+  );
+  return response.rows;
+};
+
 module.exports = {
   getAllUserRecipes,
   getAllUserRecipeBoxes,
   createRecipeBox,
+  createRecipe,
 };

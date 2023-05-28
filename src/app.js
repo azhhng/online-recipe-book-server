@@ -64,6 +64,10 @@ app.post("/:user/recipe-box", (req, res) => __awaiter(void 0, void 0, void 0, fu
     const recipeBox = yield userController.postUserRecipeBox(req, res);
     return res.json(recipeBox);
 }));
+app.post("/:user/recipe", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const recipe = yield userController.postUserRecipe(req, res);
+    return res.json(recipe);
+}));
 app.use("/", (req, res) => {
     res.send("Hello world!");
 });

@@ -24,3 +24,9 @@ exports.postUserRecipeBox = (req, res) => __awaiter(void 0, void 0, void 0, func
     const recipeBox = yield queries.createRecipeBox(user_id, name, description);
     return recipeBox;
 });
+exports.postUserRecipe = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user_id = req.params.user;
+    const { name, link, description, has_made, favorite, recipe_box_id } = req.body;
+    const recipeBox = yield queries.createRecipe(user_id, name, link, description, has_made, favorite, recipe_box_id);
+    return recipeBox;
+});
