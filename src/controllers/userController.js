@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 const queries = require("../postgresql/queries");
 exports.getAllUserRecipes = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const recipes = yield queries.getAllUserRecipes(req.params.user);
@@ -16,4 +17,10 @@ exports.getAllUserRecipes = (req, res) => __awaiter(void 0, void 0, void 0, func
 exports.getAllUserRecipeBoxes = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const recipeBoxes = yield queries.getAllUserRecipeBoxes(req.params.user);
     return recipeBoxes;
+});
+exports.postUserRecipeBox = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user_id = req.params.user;
+    const { name, description } = req.body;
+    const recipeBox = yield queries.createRecipeBox(user_id, name, description);
+    return recipeBox;
 });

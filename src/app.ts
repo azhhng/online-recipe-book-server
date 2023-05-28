@@ -29,6 +29,11 @@ app.get("/:user/recipe-box", async (req, res) => {
   return res.json(recipeBoxes);
 });
 
+app.post("/:user/recipe-box", async (req, res) => {
+  const recipeBox = await userController.postUserRecipeBox(req, res);
+  return res.json(recipeBox);
+});
+
 app.use("/", (req: Request, res: Response): void => {
   res.send("Hello world!");
 });

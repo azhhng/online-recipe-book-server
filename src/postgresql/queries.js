@@ -52,10 +52,14 @@ const getAllUserRecipes = (userId) => __awaiter(void 0, void 0, void 0, function
 });
 const getAllUserRecipeBoxes = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     const response = yield pool.query("SELECT * FROM recipe_box WHERE user_id=$1", [userId]);
-    console.log(response.rows);
+    return response.rows;
+});
+const createRecipeBox = (userId, name, description) => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield pool.query(`INSERT INTO "recipe_box" (user_id, recipe_box_id, name, description) VALUES ($1, nextval('recipe_box_id_sequence'), $2, $3) RETURNING *`, [userId, name, description]);
     return response.rows;
 });
 module.exports = {
     getAllUserRecipes,
     getAllUserRecipeBoxes,
+    createRecipeBox,
 };
