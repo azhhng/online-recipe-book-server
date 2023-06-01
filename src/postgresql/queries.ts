@@ -39,6 +39,30 @@ const createRecipeBox = async (
   return response.rows;
 };
 
+const updateRecipeBox = async (
+  recipe_box_id: BigInt,
+  propertiesToUpdate: { [property: string]: string }
+) => {
+  let properties = "";
+
+  for (let property in propertiesToUpdate) {
+    properties += property;
+    properties += "=";
+    properties += "'";
+    properties += propertiesToUpdate[property];
+    properties += "'";
+    properties += ",";
+  }
+
+  properties = properties.slice(0, -1);
+
+  const response = await pool.query(
+    `UPDATE recipe_box SET ${properties} WHERE recipe_box_id=$1`,
+    [recipe_box_id]
+  );
+  return response.rows;
+};
+
 const createRecipe = async (
   userId: string,
   name: string,
@@ -60,5 +84,6 @@ module.exports = {
   getAllUserRecipes,
   getAllUserRecipeBoxes,
   createRecipeBox,
+  updateRecipeBox,
   createRecipe,
 };
