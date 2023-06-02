@@ -39,6 +39,11 @@ app.put("/recipe-box/:box", async (req, res) => {
   return res.json(recipeBox);
 });
 
+app.delete("/recipe-box/:box", async (req, res) => {
+  const recipeBox = await userController.deleteRecipeBox(req, res);
+  return res.json(recipeBox);
+});
+
 app.post("/:user/recipe", async (req, res) => {
   const recipe = await userController.postUserRecipe(req, res);
   return res.json(recipe);

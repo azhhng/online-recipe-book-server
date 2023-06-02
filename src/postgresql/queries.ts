@@ -63,6 +63,19 @@ const updateRecipeBox = async (
   return response.rows;
 };
 
+const deleteRecipeBox = async (recipe_box_id: string) => {
+  const recipe_response = await pool.query(
+    `DELETE FROM recipe WHERE recipe_box_id=$1`,
+    [recipe_box_id]
+  );
+
+  const recipe_box_response = await pool.query(
+    `DELETE FROM recipe_box WHERE recipe_box_id=$1`,
+    [recipe_box_id]
+  );
+  return recipe_box_response;
+};
+
 const createRecipe = async (
   userId: string,
   name: string,
@@ -85,5 +98,6 @@ module.exports = {
   getAllUserRecipeBoxes,
   createRecipeBox,
   updateRecipeBox,
+  deleteRecipeBox,
   createRecipe,
 };

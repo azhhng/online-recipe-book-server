@@ -24,6 +24,12 @@ exports.putRecipeBox = async (req: Request, res: Response) => {
   return recipeBox;
 };
 
+exports.deleteRecipeBox = async (req: Request, res: Response) => {
+  const recipe_box_id = req.params.box;
+  const recipeBox = await queries.deleteRecipeBox(recipe_box_id);
+  return recipeBox;
+};
+
 exports.postUserRecipe = async (req: Request, res: Response) => {
   const user_id = req.params.user;
   const { name, link, description, has_made, favorite, recipe_box_id } =
