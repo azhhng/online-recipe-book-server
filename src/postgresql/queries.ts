@@ -30,11 +30,12 @@ const getAllUserRecipeBoxes = async (userId: string) => {
 const createRecipeBox = async (
   userId: string,
   name: string,
-  description: string
+  description: string,
+  color: string
 ) => {
   const response = await pool.query(
-    `INSERT INTO "recipe_box" (user_id, recipe_box_id, name, description) VALUES ($1, nextval('recipe_box_id_sequence'), $2, $3) RETURNING *`,
-    [userId, name, description]
+    `INSERT INTO "recipe_box" (user_id, recipe_box_id, name, description, color) VALUES ($1, nextval('recipe_box_id_sequence'), $2, $3, $4) RETURNING *`,
+    [userId, name, description, color]
   );
   return response.rows;
 };
@@ -93,6 +94,30 @@ const createRecipe = async (
   return response.rows;
 };
 
+const updateRecipe = async (
+  recipe_id: BigInt,
+  propertiesToUpdate: { [property: string]: string }
+) => {
+  let properties = "";
+
+  for (let property in propertiesToUpdate) {
+    properties += property;
+    properties += "=";
+    properties += "'";
+    properties += propertiesToUpdate[property];
+    properties += "'";
+    properties += ",";
+  }
+
+  properties = properties.slice(0, -1);
+
+  const response = await pool.query(
+    `UPDATE recipe SET ${properties} WHERE recipe_id=$1`,
+    [recipe_id]
+  );
+  return response.rows;
+};
+
 module.exports = {
   getAllUserRecipes,
   getAllUserRecipeBoxes,
@@ -100,4 +125,5 @@ module.exports = {
   updateRecipeBox,
   deleteRecipeBox,
   createRecipe,
+  updateRecipe,
 };

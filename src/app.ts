@@ -15,10 +15,6 @@ const options: cors.CorsOptions = {
 app.use(cors(options));
 app.use(express.json());
 
-app.get("/test-get", (req, res) => {
-  res.status(200).send("test get success");
-});
-
 app.get("/:user/recipe", async (req, res) => {
   const recipes = await userController.getAllUserRecipes(req, res);
   return res.json(recipes);
@@ -49,8 +45,13 @@ app.post("/:user/recipe", async (req, res) => {
   return res.json(recipe);
 });
 
+app.put("/recipe/:id", async (req, res) => {
+  const recipe = await userController.putRecipe(req, res);
+  return res.json(recipe);
+});
+
 app.use("/", (req: Request, res: Response): void => {
-  res.send("Hello world!");
+  res.send("The online-recipe-book API is connected.");
 });
 
 app.listen(process.env.PORT_NUMBER, (): void => {

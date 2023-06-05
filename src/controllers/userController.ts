@@ -13,8 +13,13 @@ exports.getAllUserRecipeBoxes = async (req: Request, res: Response) => {
 
 exports.postUserRecipeBox = async (req: Request, res: Response) => {
   const user_id = req.params.user;
-  const { name, description } = req.body;
-  const recipeBox = await queries.createRecipeBox(user_id, name, description);
+  const { name, description, color } = req.body;
+  const recipeBox = await queries.createRecipeBox(
+    user_id,
+    name,
+    description,
+    color
+  );
   return recipeBox;
 };
 
@@ -44,4 +49,10 @@ exports.postUserRecipe = async (req: Request, res: Response) => {
     recipe_box_id
   );
   return recipeBox;
+};
+
+exports.putRecipe = async (req: Request, res: Response) => {
+  const recipe_id = req.params.recipe;
+  const recipe = await queries.updateRecipe(recipe_id, req.body);
+  return recipe;
 };
