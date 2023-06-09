@@ -31,11 +31,12 @@ const createRecipeBox = async (
   userId: string,
   name: string,
   description: string,
+  emoji: string,
   color: string
 ) => {
   const response = await pool.query(
-    `INSERT INTO "recipe_box" (user_id, recipe_box_id, name, description, color) VALUES ($1, nextval('recipe_box_id_sequence'), $2, $3, $4) RETURNING *`,
-    [userId, name, description, color]
+    `INSERT INTO "recipe_box" (user_id, recipe_box_id, name, description, emoji, color) VALUES ($1, nextval('recipe_box_id_sequence'), $2, $3, $4, $5) RETURNING *`,
+    [userId, name, description, emoji, color]
   );
   return response.rows;
 };

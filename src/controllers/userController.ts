@@ -13,11 +13,12 @@ exports.getAllUserRecipeBoxes = async (req: Request, res: Response) => {
 
 exports.postUserRecipeBox = async (req: Request, res: Response) => {
   const user_id = req.params.user;
-  const { name, description, color } = req.body;
+  const { name, description, emoji, color } = req.body;
   const recipeBox = await queries.createRecipeBox(
     user_id,
     name,
     description,
+    emoji,
     color
   );
   return recipeBox;
