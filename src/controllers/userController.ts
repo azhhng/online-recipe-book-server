@@ -53,7 +53,13 @@ exports.postUserRecipe = async (req: Request, res: Response) => {
 };
 
 exports.putRecipe = async (req: Request, res: Response) => {
-  const recipe_id = req.params.recipe;
+  const recipe_id = req.params.id;
   const recipe = await queries.updateRecipe(recipe_id, req.body);
+  return recipe;
+};
+
+exports.deleteRecipe = async (req: Request, res: Response) => {
+  const recipe_id = req.params.id;
+  const recipe = await queries.deleteRecipe(recipe_id);
   return recipe;
 };

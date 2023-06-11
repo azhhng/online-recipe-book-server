@@ -50,6 +50,11 @@ app.put("/recipe/:id", async (req, res) => {
   return res.json(recipe);
 });
 
+app.delete("/recipe/:id", async (req, res) => {
+  const recipe = await userController.deleteRecipe(req, res);
+  return res.json(recipe);
+});
+
 app.use("/", (req: Request, res: Response): void => {
   res.send("The online-recipe-book API is connected.");
 });
