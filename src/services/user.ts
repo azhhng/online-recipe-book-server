@@ -36,7 +36,7 @@ const deleteUser = async (user_id: string) => {
   return response;
 };
 
-const getUser = async (user_id: string, fields: string) => {
+const getUserAuth0 = async (user_id: string, fields: string) => {
   const token = await getToken();
   var options = {
     method: "GET",
@@ -56,5 +56,5 @@ const getUser = async (user_id: string, fields: string) => {
 
 module.exports = {
   deleteUser,
-  getUser,
+  getUserAuth0,
 };
