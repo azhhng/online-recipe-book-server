@@ -1,9 +1,8 @@
 // handle auth0
 const axios = require("axios").default;
 const queries = require("../postgresql/queries");
-const ManagementClient = require("auth0").ManagementClient;
 
-const getManagementClient = async () => {
+const getToken = async () => {
   var authOptions = {
     method: "POST",
     url: `https://${process.env.AUTH0_DOMAIN}/oauth/token`,
@@ -17,22 +16,45 @@ const getManagementClient = async () => {
   };
 
   const response = await axios.request(authOptions);
-  const token = response.data.access_token;
-  return new ManagementClient({
-    token,
-    domain: process.env.AUTH0_DOMAIN,
-  });
+  return response.data.access_token;
 };
 
 const deleteUser = async (user_id: string) => {
   // remove from auth0
-  const auth0 = await getManagementClient();
-  await auth0.deleteUser({ id: user_id });
+  const token = await getToken();
+  var options = {
+    method: "DELETE",
+    url: `${process.env.AUTH0_API_ADDRESS}/users/${user_id}`,
+    headers: {
+      "content-type": "application/json",
+      authorization: `Bearer ${token}`,
+    },
+  };
+  await axios(options);
   // remove from database
   const response = await queries.deleteUser(user_id);
   return response;
 };
 
+const getUser = async (user_id: string, fields: string) => {
+  const token = await getToken();
+  var options = {
+    method: "GET",
+    url: `${process.env.AUTH0_API_ADDRESS}/users/${user_id}?fields=${fields}`,
+    headers: {
+      "content-type": "application/json",
+      authorization: `Bearer ${token}`,
+    },
+  };
+  try {
+    const response = (await axios(options)).data;
+    return response;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = {
   deleteUser,
+  getUser,
 };

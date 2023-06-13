@@ -70,3 +70,17 @@ exports.deleteUser = async (req: Request, res: Response) => {
   const response = await userService.deleteUser(user_id);
   return response;
 };
+
+exports.createUser = async (req: Request, res: Response) => {
+  const user_id = req.params.user;
+  const { name, emoji, color } = req.body;
+  const user = await queries.createUser(user_id, name, emoji, color);
+  return user;
+};
+
+exports.getUser = async (req: Request, res: Response) => {
+  const user_id = req.params.user;
+  const fields = req.query.fields;
+  const response = await userService.getUser(user_id, fields);
+  return response;
+};

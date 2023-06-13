@@ -135,6 +135,20 @@ const deleteUser = async (user_id: string) => {
   return response;
 };
 
+const createUser = async (
+  userId: string,
+  name: string,
+  emoji: string,
+  color: string
+) => {
+  const response = await pool.query(
+    `INSERT INTO "app_user" (user_id, emoji, color, name)
+    VALUES ($1, $2, $3, $4) RETURNING *`,
+    [userId, emoji, color, name]
+  );
+  return response.rows;
+};
+
 module.exports = {
   getAllUserRecipes,
   getAllUserRecipeBoxes,
@@ -145,4 +159,5 @@ module.exports = {
   updateRecipe,
   deleteRecipe,
   deleteUser,
+  createUser,
 };
