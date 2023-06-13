@@ -12,6 +12,24 @@ const pool = new Pool({
   port: process.env.POSTGRESQL_PORT,
 });
 
+const getPropertiesToUpdate = (propertiesToUpdate: {
+  [property: string]: string;
+}) => {
+  let properties = "";
+
+  for (let property in propertiesToUpdate) {
+    properties += property;
+    properties += "=";
+    properties += "'";
+    properties += propertiesToUpdate[property];
+    properties += "'";
+    properties += ",";
+  }
+
+  properties = properties.slice(0, -1);
+  return properties;
+};
+
 const getAllUserRecipes = async (userId: string) => {
   const response = await pool.query("SELECT * FROM recipe WHERE user_id=$1", [
     userId,
@@ -45,19 +63,7 @@ const updateRecipeBox = async (
   recipe_box_id: BigInt,
   propertiesToUpdate: { [property: string]: string }
 ) => {
-  let properties = "";
-
-  for (let property in propertiesToUpdate) {
-    properties += property;
-    properties += "=";
-    properties += "'";
-    properties += propertiesToUpdate[property];
-    properties += "'";
-    properties += ",";
-  }
-
-  properties = properties.slice(0, -1);
-
+  const properties = getPropertiesToUpdate(propertiesToUpdate);
   const response = await pool.query(
     `UPDATE recipe_box SET ${properties} WHERE recipe_box_id=$1`,
     [recipe_box_id]
@@ -99,18 +105,7 @@ const updateRecipe = async (
   recipe_id: BigInt,
   propertiesToUpdate: { [property: string]: string }
 ) => {
-  let properties = "";
-
-  for (let property in propertiesToUpdate) {
-    properties += property;
-    properties += "=";
-    properties += "'";
-    properties += propertiesToUpdate[property];
-    properties += "'";
-    properties += ",";
-  }
-
-  properties = properties.slice(0, -1);
+  const properties = getPropertiesToUpdate(propertiesToUpdate);
 
   const response = await pool.query(
     `UPDATE recipe SET ${properties} WHERE recipe_id=$1`,
@@ -149,6 +144,26 @@ const createUser = async (
   return response.rows;
 };
 
+const getUser = async (userId: string) => {
+  const response = await pool.query(`SELECT * FROM app_user WHERE user_id=$1`, [
+    userId,
+  ]);
+  return response.rows;
+};
+
+const updateUser = async (
+  user_id: string,
+  propertiesToUpdate: { [property: string]: string }
+) => {
+  const properties = getPropertiesToUpdate(propertiesToUpdate);
+
+  const response = await pool.query(
+    `UPDATE app_user SET ${properties} WHERE user_id=$1`,
+    [user_id]
+  );
+  return response.rows;
+};
+
 module.exports = {
   getAllUserRecipes,
   getAllUserRecipeBoxes,
@@ -160,4 +175,6 @@ module.exports = {
   deleteRecipe,
   deleteUser,
   createUser,
+  getUser,
+  updateUser,
 };

@@ -80,7 +80,19 @@ exports.createUser = async (req: Request, res: Response) => {
 
 exports.getUser = async (req: Request, res: Response) => {
   const user_id = req.params.user;
-  const fields = req.query.fields;
-  const response = await userService.getUser(user_id, fields);
+  const response = await queries.getUser(user_id);
   return response;
+};
+
+exports.getUserAuth0 = async (req: Request, res: Response) => {
+  const user_id = req.params.user;
+  const fields = req.query.fields;
+  const response = await userService.getUserAuth0(user_id, fields);
+  return response;
+};
+
+exports.putUser = async (req: Request, res: Response) => {
+  const user_id = req.params.user;
+  const user = await queries.updateUser(user_id, req.body);
+  return user;
 };

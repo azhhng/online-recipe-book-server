@@ -2,14 +2,26 @@ import express, { Request, Response } from "express";
 const router = express.Router();
 const userController = require("../controllers/userController");
 
+// get user information from the database
 router.get("/:user", async (req: Request, res: Response) => {
   const response = await userController.getUser(req, res);
+  return res.json(response);
+});
+
+// get user information from Auth0
+router.get("/:user/auth0", async (req: Request, res: Response) => {
+  const response = await userController.getUserAuth0(req, res);
   return res.json(response);
 });
 
 router.post("/:user", async (req: Request, res: Response) => {
   const response = await userController.createUser(req, res);
   return res.json(response);
+});
+
+router.put("/:user", async (req: Request, res: Response) => {
+  const user = await userController.putUser(req, res);
+  return res.json(user);
 });
 
 router.delete("/:user", async (req: Request, res: Response) => {
