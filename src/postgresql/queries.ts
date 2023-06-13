@@ -126,6 +126,15 @@ const deleteRecipe = async (recipe_id: string) => {
   return response;
 };
 
+const deleteUser = async (user_id: string) => {
+  await pool.query(`DELETE FROM recipe WHERE user_id=$1`, [user_id]);
+  await pool.query(`DELETE FROM recipe_box WHERE user_id=$1`, [user_id]);
+  const response = await pool.query(`DELETE FROM app_user WHERE user_id=$1`, [
+    user_id,
+  ]);
+  return response;
+};
+
 module.exports = {
   getAllUserRecipes,
   getAllUserRecipeBoxes,
@@ -135,4 +144,5 @@ module.exports = {
   createRecipe,
   updateRecipe,
   deleteRecipe,
+  deleteUser,
 };

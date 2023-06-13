@@ -2,6 +2,8 @@ import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import * as dotenv from "dotenv";
 const app: Application = express();
+
+// routing files
 const userRoutes = require("./routes/user");
 const recipeBoxRoutes = require("./routes/recipeBox");
 const recipeRoutes = require("./routes/recipe");

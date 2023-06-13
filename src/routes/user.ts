@@ -22,4 +22,9 @@ router.post("/:user/recipe", async (req: Request, res: Response) => {
   return res.json(recipe);
 });
 
+router.delete("/:user", async (req: Request, res: Response) => {
+  const response = await userController.deleteUser(req, res);
+  return res.json(response);
+});
+
 module.exports = router;

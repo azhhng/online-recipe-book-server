@@ -1,4 +1,5 @@
 const queries = require("../postgresql/queries");
+const userService = require("../services/user");
 import { Request, Response } from "express";
 
 exports.getAllUserRecipes = async (req: Request, res: Response) => {
@@ -62,4 +63,10 @@ exports.deleteRecipe = async (req: Request, res: Response) => {
   const recipe_id = req.params.id;
   const recipe = await queries.deleteRecipe(recipe_id);
   return recipe;
+};
+
+exports.deleteUser = async (req: Request, res: Response) => {
+  const user_id = req.params.user;
+  const response = await userService.deleteUser(user_id);
+  return response;
 };
