@@ -14,26 +14,35 @@ const getToken = async () => {
       audience: `https://${process.env.AUTH0_DOMAIN}/api/v2/`,
     }),
   };
-
-  const response = await axios.request(authOptions);
-  return response.data.access_token;
+  try {
+    const response = await axios.request(authOptions);
+    return response.data.access_token;
+  } catch (error) {
+    console.log("There was an error getting the Auth0 token.");
+    throw error;
+  }
 };
 
 const deleteUser = async (user_id: string) => {
-  // remove from auth0
-  const token = await getToken();
-  var options = {
-    method: "DELETE",
-    url: `${process.env.AUTH0_API_ADDRESS}/users/${user_id}`,
-    headers: {
-      "content-type": "application/json",
-      authorization: `Bearer ${token}`,
-    },
-  };
-  await axios(options);
-  // remove from database
-  const response = await queries.deleteUser(user_id);
-  return response;
+  try {
+    // remove from auth0
+    const token = await getToken();
+    var options = {
+      method: "DELETE",
+      url: `${process.env.AUTH0_API_ADDRESS}/users/${user_id}`,
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+    };
+    await axios(options);
+    // remove from database
+    const response = await queries.deleteUser(user_id);
+    return response;
+  } catch (error) {
+    console.log("There was an error deleting user.");
+    throw error;
+  }
 };
 
 const getUserAuth0 = async (user_id: string, fields: string) => {

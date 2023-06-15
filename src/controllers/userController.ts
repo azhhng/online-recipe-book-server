@@ -67,8 +67,16 @@ exports.deleteRecipe = async (req: Request, res: Response) => {
 
 exports.deleteUser = async (req: Request, res: Response) => {
   const user_id = req.params.user;
-  const response = await userService.deleteUser(user_id);
-  return response;
+  try {
+    const response = await userService.deleteUser(user_id);
+    return response;
+  } catch (error) {
+    res
+      .status(400)
+      .json({
+        message: "There was an error with the DELETE endpoint for /user.",
+      });
+  }
 };
 
 exports.createUser = async (req: Request, res: Response) => {
