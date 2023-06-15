@@ -9,13 +9,14 @@ const getToken = async () => {
     headers: { "content-type": "application/json" },
     data: new URLSearchParams({
       grant_type: "client_credentials",
-      client_id: process.env.AUTH0_API_CLIENT_ID ?? "",
-      client_secret: process.env.AUTH0_API_CLIENT_SECRET ?? "",
+      client_id: `${process.env.AUTH0_API_CLIENT_ID}`,
+      client_secret: `${process.env.AUTH0_API_CLIENT_SECRET}`,
       audience: `https://${process.env.AUTH0_DOMAIN}/api/v2/`,
     }),
   };
   try {
     const response = await axios.request(authOptions);
+    console.log("response");
     return response.data.access_token;
   } catch (error) {
     console.log(error);
