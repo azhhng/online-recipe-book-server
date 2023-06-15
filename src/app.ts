@@ -15,6 +15,7 @@ dotenv.config();
 app.use(
   cors({
     origin: ["http://localhost:3000", "https://online-recipe-book.vercel.app"],
+    methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
   })
 );
 app.use(express.json());
