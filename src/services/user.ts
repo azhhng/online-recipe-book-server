@@ -6,7 +6,7 @@ const getToken = async () => {
   var authOptions = {
     method: "POST",
     url: `https://${process.env.AUTH0_DOMAIN}/oauth/token`,
-    headers: { "content-type": "application/x-www-form-urlencoded" },
+    headers: { "content-type": "application/json" },
     data: new URLSearchParams({
       grant_type: "client_credentials",
       client_id: process.env.AUTH0_API_CLIENT_ID ?? "",
