@@ -6,13 +6,13 @@ const getToken = async () => {
   var authOptions = {
     method: "POST",
     url: `https://${process.env.AUTH0_DOMAIN}/oauth/token`,
-    headers: { "content-type": "x-www-form-urlencoded" },
-    data: new URLSearchParams({
+    headers: { "content-type": "application/json" },
+    body: {
       grant_type: "client_credentials",
       client_id: `${process.env.AUTH0_API_CLIENT_ID}`,
       client_secret: `${process.env.AUTH0_API_CLIENT_SECRET}`,
       audience: `https://${process.env.AUTH0_DOMAIN}/api/v2/`,
-    }),
+    },
   };
   try {
     const response = await axios.request(authOptions);
