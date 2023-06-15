@@ -12,11 +12,21 @@ const recipeRoutes = require("./routes/recipe");
 dotenv.config();
 
 // configure cors
-const allowedOrigins = [process.env.APP_URL ?? ""];
-const options: cors.CorsOptions = {
-  origin: allowedOrigins,
+var whitelist = [
+  "https://online-recipe-book.vercel.app",
+  "http://localhost:3000",
+];
+var corsOptions = {
+  origin: function (origin: any, callback: any) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
 };
-app.use(cors(options));
+app.use(cors(corsOptions));
+
 app.use(express.json());
 
 // handle routing
