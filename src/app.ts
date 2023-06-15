@@ -12,7 +12,10 @@ const recipeRoutes = require("./routes/recipe");
 dotenv.config();
 
 // configure cors
-const allowedOrigins = ["http://localhost:3000"];
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://online-recipe-book.vercel.app",
+];
 const options: cors.CorsOptions = {
   origin: allowedOrigins,
 };
