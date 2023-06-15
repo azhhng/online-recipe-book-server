@@ -12,16 +12,12 @@ const recipeRoutes = require("./routes/recipe");
 dotenv.config();
 
 // configure cors
-app.use(
-  cors({
-    origin: ["http://localhost:3000", "https://online-recipe-book.vercel.app"],
-  })
-);
+const allowedOrigins = [process.env.APP_URL ?? ""];
+const options: cors.CorsOptions = {
+  origin: allowedOrigins,
+};
+app.use(cors(options));
 app.use(express.json());
-app.use(function (req, res, next) {
-  if ("OPTIONS" == req.method) res.send(200);
-  else next();
-});
 
 // handle routing
 app.use("/user", userRoutes);
