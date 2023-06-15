@@ -24,6 +24,8 @@ var corsOptions = {
       callback(new Error("Not allowed by CORS"));
     }
   },
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+  preflightContinue: true,
 };
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
