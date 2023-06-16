@@ -7,7 +7,12 @@ const getToken = async () => {
     method: "POST",
     url: `https://${process.env.AUTH0_DOMAIN}/oauth/token`,
     headers: { "content-type": "application/json" },
-    body: `{"client_id":${process.env.AUTH0_API_CLIENT_ID},"client_secret":${process.env.AUTH0_API_CLIENT_SECRET},"audience":${process.env.AUTH0_API_ADDRESS},"grant_type":"client_credentials"}`,
+    data: {
+      grant_type: "client_credentials",
+      client_id: process.env.AUTH0_API_CLIENT_ID ?? "",
+      client_secret: process.env.AUTH0_API_CLIENT_SECRET ?? "",
+      audience: process.env.AUTH0_API_ADDRESS ?? "",
+    },
   };
   try {
     const response = await axios.request(authOptions);
