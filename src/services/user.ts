@@ -7,12 +7,7 @@ const getToken = async () => {
     method: "POST",
     url: `https://${process.env.AUTH0_DOMAIN}/oauth/token`,
     headers: { "content-type": "application/json" },
-    body: {
-      grant_type: "client_credentials",
-      client_id: `${process.env.AUTH0_API_CLIENT_ID}`,
-      client_secret: `${process.env.AUTH0_API_CLIENT_SECRET}`,
-      audience: `https://${process.env.AUTH0_DOMAIN}/api/v2/`,
-    },
+    body: `{"client_id":${process.env.AUTH0_API_CLIENT_ID},"client_secret":${process.env.AUTH0_API_CLIENT_SECRET},"audience":${process.env.AUTH0_API_ADDRESS},"grant_type":"client_credentials"}`,
   };
   try {
     const response = await axios.request(authOptions);
@@ -31,7 +26,7 @@ const deleteUser = async (user_id: string) => {
     const token = await getToken();
     var options = {
       method: "DELETE",
-      url: `${process.env.AUTH0_API_ADDRESS}/users/${user_id}`,
+      url: `${process.env.AUTH0_API_ADDRESS}users/${user_id}`,
       headers: {
         "content-type": "application/json",
         authorization: `Bearer ${token}`,
@@ -51,7 +46,7 @@ const getUserAuth0 = async (user_id: string, fields: string) => {
   const token = await getToken();
   var options = {
     method: "GET",
-    url: `${process.env.AUTH0_API_ADDRESS}/users/${user_id}?fields=${fields}`,
+    url: `${process.env.AUTH0_API_ADDRESS}users/${user_id}?fields=${fields}`,
     headers: {
       "content-type": "application/json",
       authorization: `Bearer ${token}`,
