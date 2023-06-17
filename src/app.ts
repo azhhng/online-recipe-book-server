@@ -12,10 +12,7 @@ const recipeRoutes = require("./routes/recipe");
 dotenv.config();
 
 // configure cors
-var whitelist = [
-  "https://online-recipe-book.vercel.app",
-  "http://localhost:3000",
-];
+var whitelist = ["https://recipeboxd.vercel.app", "http://localhost:3000"];
 var corsOptions = {
   origin: function (origin: any, callback: any) {
     if (whitelist.indexOf(origin) !== -1) {
