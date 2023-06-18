@@ -9,7 +9,7 @@ router.put("/:box", async (req: Request, res: Response) => {
     const recipeBox = await userController.putRecipeBox(req, res);
     return res.status(201).json(recipeBox);
   } catch (error) {
-    return res.status(500).json(error);
+    return res.status(500).json("There was an error editing the recipe box.");
   }
 });
 
@@ -18,7 +18,7 @@ router.delete("/:box", async (req: Request, res: Response) => {
     const recipeBox = await userController.deleteRecipeBox(req, res);
     return res.status(200).json(recipeBox);
   } catch (error) {
-    return res.status(500).json(error);
+    return res.status(500).json("There was an error deleting the recipe box.");
   }
 });
 
