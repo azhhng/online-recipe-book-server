@@ -6,11 +6,11 @@ const userController = require("../controllers/userController");
 
 router.put("/:id", async (req: Request, res: Response) => {
   const recipe = await userController.putRecipe(req, res);
-  return res.json(recipe);
+  return res.status(201).json(recipe);
 });
 router.delete("/:id", async (req: Request, res: Response) => {
   const recipe = await userController.deleteRecipe(req, res);
-  return res.json(recipe);
+  return res.status(200).json(recipe);
 });
 
 module.exports = router;
