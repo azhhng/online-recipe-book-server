@@ -3,6 +3,7 @@ const userService = require("../services/user");
 import { Request, Response } from "express";
 import { logger } from "../logger";
 import { validateRecipeBoxBody } from "../validations/recipeBox";
+import { validateRecipeBody } from "../validations/recipe";
 
 const fileName = "userController.ts";
 
@@ -15,7 +16,8 @@ exports.getAllUserRecipes = async (req: Request, res: Response) => {
     logger(
       fileName,
       "getAllUserRecipes",
-      `There was an error getting all of user ${req.params.user}'s recipes.`
+      `There was an error getting all of user ${req.params.user}'s recipes.`,
+      error
     );
     throw error;
   }
@@ -30,7 +32,8 @@ exports.getAllUserRecipeBoxes = async (req: Request, res: Response) => {
     logger(
       fileName,
       "getAllUserRecipeBoxes",
-      `There was an error getting all of user ${req.params.user}'s recipe boxes.`
+      `There was an error getting all of user ${req.params.user}'s recipe boxes.`,
+      error
     );
     throw error;
   }
@@ -53,7 +56,8 @@ exports.postRecipeBox = async (req: Request, res: Response) => {
     logger(
       fileName,
       "postRecipeBox",
-      `There was an error creating a recipe box for user ${req.params.user}.`
+      `There was an error creating a recipe box for user ${req.params.user}.`,
+      error
     );
     throw error;
   }
@@ -69,7 +73,8 @@ exports.putRecipeBox = async (req: Request, res: Response) => {
     logger(
       fileName,
       "putRecipeBox",
-      `There was an error editing the recipe box ${req.params.box}.`
+      `There was an error editing the recipe box ${req.params.box}.`,
+      error
     );
     throw error;
   }
@@ -84,7 +89,8 @@ exports.deleteRecipeBox = async (req: Request, res: Response) => {
     logger(
       fileName,
       "deleteRecipeBox",
-      `There was an error deleting the recipe box ${req.params.box}.`
+      `There was an error deleting the recipe box ${req.params.box}.`,
+      error
     );
     throw error;
   }
@@ -95,6 +101,7 @@ exports.postRecipe = async (req: Request, res: Response) => {
     const userId = req.params.user;
     const { name, link, description, has_made, favorite, recipe_box_id } =
       req.body;
+    validateRecipeBody(name, link, recipe_box_id);
     const recipeBox = await queries.createRecipe(
       userId,
       name,
@@ -109,7 +116,8 @@ exports.postRecipe = async (req: Request, res: Response) => {
     logger(
       fileName,
       "postRecipe",
-      `There was an error creating a recipe for user ${req.params.user}.`
+      `There was an error creating a recipe for user ${req.params.user}.`,
+      error
     );
     throw error;
   }
@@ -124,7 +132,8 @@ exports.putRecipe = async (req: Request, res: Response) => {
     logger(
       fileName,
       "putRecipe",
-      `There was an error editing the recipe ${req.params.id}.`
+      `There was an error editing the recipe ${req.params.id}.`,
+      error
     );
     throw error;
   }
@@ -139,7 +148,8 @@ exports.deleteRecipe = async (req: Request, res: Response) => {
     logger(
       fileName,
       "deleteRecipe",
-      `There was an error deleting the recipe ${req.params.id}.`
+      `There was an error deleting the recipe ${req.params.id}.`,
+      error
     );
     throw error;
   }
@@ -154,7 +164,8 @@ exports.deleteUser = async (req: Request, res: Response) => {
     logger(
       fileName,
       "deleteUser",
-      `There was an error deleting the user ${req.params.user}.`
+      `There was an error deleting the user ${req.params.user}.`,
+      error
     );
     throw error;
   }
@@ -170,7 +181,8 @@ exports.createUser = async (req: Request, res: Response) => {
     logger(
       fileName,
       "createUser",
-      `There was an error creating the user ${req.params.user}.`
+      `There was an error creating the user ${req.params.user}.`,
+      error
     );
     throw error;
   }
@@ -185,7 +197,8 @@ exports.getUser = async (req: Request, res: Response) => {
     logger(
       fileName,
       "getUser",
-      `There was an error getting the user ${req.params.user}.`
+      `There was an error getting the user ${req.params.user}.`,
+      error
     );
     throw error;
   }
@@ -201,7 +214,8 @@ exports.getUserAuth0 = async (req: Request, res: Response) => {
     logger(
       fileName,
       "getUserAuth0",
-      `There was an error getting the user ${req.params.user}'s information from Auth0.`
+      `There was an error getting the user ${req.params.user}'s information from Auth0.`,
+      error
     );
     throw error;
   }
@@ -216,7 +230,8 @@ exports.putUser = async (req: Request, res: Response) => {
     logger(
       fileName,
       "putUser",
-      `There was an error editing the user ${req.params.user}.`
+      `There was an error editing the user ${req.params.user}.`,
+      error
     );
     throw error;
   }

@@ -15,7 +15,8 @@ const validateRecipeBoxBody = (name: string, emoji: string, color: string) => {
     logger(
       fileName,
       "validateRecipeBoxBody",
-      `There was an error validating a recipe box body.`
+      `There was an error validating a recipe box body.`,
+      error
     );
     throw error;
   }

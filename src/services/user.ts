@@ -21,7 +21,12 @@ const getToken = async () => {
     const response = await axios.request(authOptions);
     return response.data.access_token;
   } catch (error) {
-    logger(fileName, "getToken", "There was an error getting the Auth0 token.");
+    logger(
+      fileName,
+      "getToken",
+      "There was an error getting the Auth0 token.",
+      error
+    );
     throw error;
   }
 };
@@ -46,7 +51,8 @@ const deleteUser = async (user_id: string) => {
     logger(
       fileName,
       "deleteUser",
-      `There was an error deleting the user ${user_id} in Auth0.`
+      `There was an error deleting the user ${user_id} in Auth0.`,
+      error
     );
     throw error;
   }
@@ -69,7 +75,8 @@ const getUserAuth0 = async (user_id: string, fields: string) => {
     logger(
       fileName,
       "getUserAuth0",
-      `There was an error getting the user ${user_id} from Auth0.`
+      `There was an error getting the user ${user_id} from Auth0.`,
+      error
     );
     throw error;
   }
