@@ -1,6 +1,9 @@
 // handle auth0
 const axios = require("axios").default;
 const queries = require("../postgresql/queries");
+import { logger } from "../logger";
+
+const fileName = "user.ts";
 
 const getToken = async () => {
   var authOptions = {
@@ -16,11 +19,9 @@ const getToken = async () => {
   };
   try {
     const response = await axios.request(authOptions);
-    console.log("response");
     return response.data.access_token;
   } catch (error) {
-    console.log(error);
-    console.log("There was an error getting the Auth0 token.");
+    logger(fileName, "getToken", "There was an error getting the Auth0 token.");
     throw error;
   }
 };
@@ -42,7 +43,11 @@ const deleteUser = async (user_id: string) => {
     const response = await queries.deleteUser(user_id);
     return response;
   } catch (error) {
-    console.log("There was an error deleting user.");
+    logger(
+      fileName,
+      "deleteUser",
+      `There was an error deleting the user ${user_id} in Auth0.`
+    );
     throw error;
   }
 };
@@ -60,8 +65,13 @@ const getUserAuth0 = async (user_id: string, fields: string) => {
   try {
     const response = (await axios(options)).data;
     return response;
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    logger(
+      fileName,
+      "getUserAuth0",
+      `There was an error getting the user ${user_id} from Auth0.`
+    );
+    throw error;
   }
 };
 
