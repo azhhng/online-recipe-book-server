@@ -25,8 +25,12 @@ router.put("/:user", async (req: Request, res: Response) => {
 });
 
 router.delete("/:user", async (req: Request, res: Response) => {
-  const user = await userController.deleteUser(req, res);
-  return res.status(200).json(user);
+  try {
+    const user = await userController.deleteUser(req, res);
+    return res.status(200).json(user);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
 });
 
 router.get("/:user/recipe", async (req: Request, res: Response) => {
@@ -40,12 +44,16 @@ router.get("/:user/recipe-box", async (req: Request, res: Response) => {
 });
 
 router.post("/:user/recipe-box", async (req: Request, res: Response) => {
-  const recipeBox = await userController.postUserRecipeBox(req, res);
-  return res.status(201).json(recipeBox);
+  try {
+    const recipeBox = await userController.postRecipeBox(req, res);
+    return res.status(201).json(recipeBox);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
 });
 
 router.post("/:user/recipe", async (req: Request, res: Response) => {
-  const recipe = await userController.postUserRecipe(req, res);
+  const recipe = await userController.postRecipe(req, res);
   return res.status(201).json(recipe);
 });
 

@@ -2,6 +2,7 @@ const queries = require("../postgresql/queries");
 const userService = require("../services/user");
 import { Request, Response } from "express";
 import { logger } from "../logger";
+import { validateRecipeBoxBody } from "../validations/recipeBox";
 
 const fileName = "userController.ts";
 
@@ -39,6 +40,7 @@ exports.postRecipeBox = async (req: Request, res: Response) => {
   try {
     const userId = req.params.user;
     const { name, description, emoji, color } = req.body;
+    validateRecipeBoxBody(name, emoji, color);
     const recipeBox = await queries.createRecipeBox(
       userId,
       name,
@@ -60,8 +62,8 @@ exports.postRecipeBox = async (req: Request, res: Response) => {
 exports.putRecipeBox = async (req: Request, res: Response) => {
   try {
     const recipeBoxId = req.params.box;
-    const boxBody = req.body;
-    const recipeBox = await queries.updateRecipeBox(recipeBoxId, boxBody);
+    const box = req.body;
+    const recipeBox = await queries.updateRecipeBox(recipeBoxId, box);
     return recipeBox;
   } catch (error) {
     logger(
