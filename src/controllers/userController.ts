@@ -1,106 +1,221 @@
 const queries = require("../postgresql/queries");
 const userService = require("../services/user");
 import { Request, Response } from "express";
+import { logger } from "../logger";
+
+const fileName = "userController.ts";
 
 exports.getAllUserRecipes = async (req: Request, res: Response) => {
-  const recipes = await queries.getAllUserRecipes(req.params.user);
-  return recipes;
+  try {
+    const userId = req.params.user;
+    const recipes = await queries.getAllUserRecipes(userId);
+    return recipes;
+  } catch (error) {
+    logger(
+      fileName,
+      "getAllUserRecipes",
+      `There was an error getting all of user ${req.params.user}'s recipes.`
+    );
+    throw error;
+  }
 };
 
 exports.getAllUserRecipeBoxes = async (req: Request, res: Response) => {
-  const recipeBoxes = await queries.getAllUserRecipeBoxes(req.params.user);
-  return recipeBoxes;
+  try {
+    const userId = req.params.user;
+    const recipeBoxes = await queries.getAllUserRecipeBoxes(userId);
+    return recipeBoxes;
+  } catch (error) {
+    logger(
+      fileName,
+      "getAllUserRecipeBoxes",
+      `There was an error getting all of user ${req.params.user}'s recipe boxes.`
+    );
+    throw error;
+  }
 };
 
-exports.postUserRecipeBox = async (req: Request, res: Response) => {
-  const user_id = req.params.user;
-  const { name, description, emoji, color } = req.body;
-  const recipeBox = await queries.createRecipeBox(
-    user_id,
-    name,
-    description,
-    emoji,
-    color
-  );
-  return recipeBox;
+exports.postRecipeBox = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.user;
+    const { name, description, emoji, color } = req.body;
+    const recipeBox = await queries.createRecipeBox(
+      userId,
+      name,
+      description,
+      emoji,
+      color
+    );
+    return recipeBox;
+  } catch (error) {
+    logger(
+      fileName,
+      "postRecipeBox",
+      `There was an error creating a recipe box for user ${req.params.user}.`
+    );
+    throw error;
+  }
 };
 
 exports.putRecipeBox = async (req: Request, res: Response) => {
-  const recipe_box_id = req.params.box;
-  const recipeBox = await queries.updateRecipeBox(recipe_box_id, req.body);
-  return recipeBox;
+  try {
+    const recipeBoxId = req.params.box;
+    const boxBody = req.body;
+    const recipeBox = await queries.updateRecipeBox(recipeBoxId, boxBody);
+    return recipeBox;
+  } catch (error) {
+    logger(
+      fileName,
+      "putRecipeBox",
+      `There was an error editing the recipe box ${req.params.box}.`
+    );
+    throw error;
+  }
 };
 
 exports.deleteRecipeBox = async (req: Request, res: Response) => {
-  const recipe_box_id = req.params.box;
-  const recipeBox = await queries.deleteRecipeBox(recipe_box_id);
-  return recipeBox;
+  try {
+    const recipeBoxId = req.params.box;
+    const recipeBox = await queries.deleteRecipeBox(recipeBoxId);
+    return recipeBox;
+  } catch (error) {
+    logger(
+      fileName,
+      "deleteRecipeBox",
+      `There was an error deleting the recipe box ${req.params.box}.`
+    );
+    throw error;
+  }
 };
 
-exports.postUserRecipe = async (req: Request, res: Response) => {
-  const user_id = req.params.user;
-  const { name, link, description, has_made, favorite, recipe_box_id } =
-    req.body;
-  const recipeBox = await queries.createRecipe(
-    user_id,
-    name,
-    link,
-    description,
-    has_made,
-    favorite,
-    recipe_box_id
-  );
-  return recipeBox;
+exports.postRecipe = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.user;
+    const { name, link, description, has_made, favorite, recipe_box_id } =
+      req.body;
+    const recipeBox = await queries.createRecipe(
+      userId,
+      name,
+      link,
+      description,
+      has_made,
+      favorite,
+      recipe_box_id
+    );
+    return recipeBox;
+  } catch (error) {
+    logger(
+      fileName,
+      "postRecipe",
+      `There was an error creating a recipe for user ${req.params.user}.`
+    );
+    throw error;
+  }
 };
 
 exports.putRecipe = async (req: Request, res: Response) => {
-  const recipe_id = req.params.id;
-  const recipe = await queries.updateRecipe(recipe_id, req.body);
-  return recipe;
+  try {
+    const recipeId = req.params.id;
+    const recipe = await queries.updateRecipe(recipeId, req.body);
+    return recipe;
+  } catch (error) {
+    logger(
+      fileName,
+      "putRecipe",
+      `There was an error editing the recipe ${req.params.id}.`
+    );
+    throw error;
+  }
 };
 
 exports.deleteRecipe = async (req: Request, res: Response) => {
-  const recipe_id = req.params.id;
-  const recipe = await queries.deleteRecipe(recipe_id);
-  return recipe;
+  try {
+    const recipeId = req.params.id;
+    const recipe = await queries.deleteRecipe(recipeId);
+    return recipe;
+  } catch (error) {
+    logger(
+      fileName,
+      "deleteRecipe",
+      `There was an error deleting the recipe ${req.params.id}.`
+    );
+    throw error;
+  }
 };
 
 exports.deleteUser = async (req: Request, res: Response) => {
-  const user_id = req.params.user;
   try {
-    const response = await userService.deleteUser(user_id);
+    const userId = req.params.user;
+    const response = await userService.deleteUser(userId);
     return response;
   } catch (error) {
-    res
-      .status(400)
-      .json({
-        message: "There was an error with the DELETE endpoint for /user.",
-      });
+    logger(
+      fileName,
+      "deleteUser",
+      `There was an error deleting the user ${req.params.user}.`
+    );
+    throw error;
   }
 };
 
 exports.createUser = async (req: Request, res: Response) => {
-  const user_id = req.params.user;
-  const { name, emoji, color } = req.body;
-  const user = await queries.createUser(user_id, name, emoji, color);
-  return user;
+  try {
+    const userId = req.params.user;
+    const { name, emoji, color } = req.body;
+    const user = await queries.createUser(userId, name, emoji, color);
+    return user;
+  } catch (error) {
+    logger(
+      fileName,
+      "createUser",
+      `There was an error creating the user ${req.params.user}.`
+    );
+    throw error;
+  }
 };
 
 exports.getUser = async (req: Request, res: Response) => {
-  const user_id = req.params.user;
-  const response = await queries.getUser(user_id);
-  return response;
+  try {
+    const userId = req.params.user;
+    const response = await queries.getUser(userId);
+    return response;
+  } catch (error) {
+    logger(
+      fileName,
+      "getUser",
+      `There was an error getting the user ${req.params.user}.`
+    );
+    throw error;
+  }
 };
 
 exports.getUserAuth0 = async (req: Request, res: Response) => {
-  const user_id = req.params.user;
-  const fields = req.query.fields;
-  const response = await userService.getUserAuth0(user_id, fields);
-  return response;
+  try {
+    const userId = req.params.user;
+    const fields = req.query.fields;
+    const userAuth0 = await userService.getUserAuth0(userId, fields);
+    return userAuth0;
+  } catch (error) {
+    logger(
+      fileName,
+      "getUserAuth0",
+      `There was an error getting the user ${req.params.user}'s information from Auth0.`
+    );
+    throw error;
+  }
 };
 
 exports.putUser = async (req: Request, res: Response) => {
-  const user_id = req.params.user;
-  const user = await queries.updateUser(user_id, req.body);
-  return user;
+  try {
+    const userId = req.params.user;
+    const user = await queries.updateUser(userId, req.body);
+    return user;
+  } catch (error) {
+    logger(
+      fileName,
+      "putUser",
+      `There was an error editing the user ${req.params.user}.`
+    );
+    throw error;
+  }
 };
