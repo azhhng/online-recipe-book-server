@@ -4,7 +4,7 @@ const validateRecipeBody = (
   name: string,
   link: string,
   recipe_box_id: string
-) => {
+): void => {
   try {
     if (!name) {
       throw new Error(`Cannot create a recipe without a valid name.`);

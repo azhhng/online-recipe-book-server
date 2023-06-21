@@ -1,6 +1,10 @@
 import { logger } from "../logger";
 const fileName = "recipeBox.ts";
-const validateRecipeBoxBody = (name: string, emoji: string, color: string) => {
+const validateRecipeBoxBody = (
+  name: string,
+  emoji: string,
+  color: string
+): void => {
   try {
     if (!name) {
       throw new Error(`Cannot create a recipe box without a valid name.`);
