@@ -1,4 +1,4 @@
-import { logger } from "../logger";
+import logger from "../logger";
 const fileName = "recipeBox.ts";
 const validateRecipeBoxBody = (
   name: string,

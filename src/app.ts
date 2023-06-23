@@ -1,12 +1,10 @@
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import * as dotenv from "dotenv";
+import userRouter from "./routes/user";
+import recipeBoxRouter from "./routes/recipeBox";
+import recipeRouter from "./routes/recipe";
 const app: Application = express();
-
-// routing files
-const userRoutes = require("./routes/user");
-const recipeBoxRoutes = require("./routes/recipeBox");
-const recipeRoutes = require("./routes/recipe");
 
 // configure .env variables
 dotenv.config();
@@ -30,9 +28,9 @@ app.options("*", cors(corsOptions));
 app.use(express.json());
 
 // handle routing
-app.use("/user", userRoutes);
-app.use("/recipe-box", recipeBoxRoutes);
-app.use("/recipe", recipeRoutes);
+app.use("/user", userRouter);
+app.use("/recipe-box", recipeBoxRouter);
+app.use("/recipe", recipeRouter);
 
 app.use("/", (req: Request, res: Response): void => {
   res.send("The online-recipe-book API is connected.");

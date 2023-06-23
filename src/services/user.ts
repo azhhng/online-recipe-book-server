@@ -1,11 +1,11 @@
 // handle auth0
 const axios = require("axios").default;
-const queries = require("../postgresql/queries");
-import { logger } from "../logger";
+import * as queries from "../postgresql/queries";
+import logger from "../logger";
 
 const fileName = "user.ts";
 
-const getToken = async () => {
+export const getToken = async () => {
   var authOptions = {
     method: "POST",
     url: `https://${process.env.AUTH0_DOMAIN}/oauth/token`,
@@ -31,7 +31,7 @@ const getToken = async () => {
   }
 };
 
-const deleteUser = async (user_id: string) => {
+export const deleteUser = async (user_id: string) => {
   try {
     // remove from auth0
     const token = await getToken();
@@ -58,7 +58,7 @@ const deleteUser = async (user_id: string) => {
   }
 };
 
-const getUserAuth0 = async (user_id: string, fields: string) => {
+export const getUserAuth0 = async (user_id: string, fields: string) => {
   const token = await getToken();
   var options = {
     method: "GET",
@@ -80,9 +80,4 @@ const getUserAuth0 = async (user_id: string, fields: string) => {
     );
     throw error;
   }
-};
-
-module.exports = {
-  deleteUser,
-  getUserAuth0,
 };

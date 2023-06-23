@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
+import * as userController from "../controllers/userController";
 const router = express.Router();
-const userController = require("../controllers/userController");
 
 // all routes with "/recipe-box" go here
 
@@ -22,4 +22,4 @@ router.delete("/:box", async (req: Request, res: Response) => {
   }
 });
 
-module.exports = router;
+export default router;

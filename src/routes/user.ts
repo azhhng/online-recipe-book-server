@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
+import * as userController from "../controllers/userController";
 const router = express.Router();
-const userController = require("../controllers/userController");
 
 // get user information from the database
 router.get("/:user", async (req: Request, res: Response) => {
@@ -91,4 +91,4 @@ router.post("/:user/recipe", async (req: Request, res: Response) => {
   }
 });
 
-module.exports = router;
+export default router;

@@ -1,13 +1,13 @@
-const queries = require("../postgresql/queries");
-const userService = require("../services/user");
+import * as queries from "../postgresql/queries";
+import * as userService from "../services/user";
 import { Request, Response } from "express";
-import { logger } from "../logger";
+import logger from "../logger";
 import { validateRecipeBoxBody } from "../validations/recipeBox";
 import { validateRecipeBody } from "../validations/recipe";
 
 const fileName = "userController.ts";
 
-exports.getAllUserRecipes = async (req: Request, res: Response) => {
+export const getAllUserRecipes = async (req: Request, res: Response) => {
   try {
     const userId = req.params.user;
     const recipes = await queries.getAllUserRecipes(userId);
@@ -23,7 +23,7 @@ exports.getAllUserRecipes = async (req: Request, res: Response) => {
   }
 };
 
-exports.getAllUserRecipeBoxes = async (req: Request, res: Response) => {
+export const getAllUserRecipeBoxes = async (req: Request, res: Response) => {
   try {
     const userId = req.params.user;
     const recipeBoxes = await queries.getAllUserRecipeBoxes(userId);
@@ -39,7 +39,7 @@ exports.getAllUserRecipeBoxes = async (req: Request, res: Response) => {
   }
 };
 
-exports.postRecipeBox = async (req: Request, res: Response) => {
+export const postRecipeBox = async (req: Request, res: Response) => {
   try {
     const userId = req.params.user;
     const { name, description, emoji, color } = req.body;
@@ -63,11 +63,11 @@ exports.postRecipeBox = async (req: Request, res: Response) => {
   }
 };
 
-exports.putRecipeBox = async (req: Request, res: Response) => {
+export const putRecipeBox = async (req: Request, res: Response) => {
   try {
     const recipeBoxId = req.params.box;
     const box = req.body;
-    const recipeBox = await queries.updateRecipeBox(recipeBoxId, box);
+    const recipeBox = await queries.updateRecipeBox(BigInt(recipeBoxId), box);
     return recipeBox;
   } catch (error) {
     logger(
@@ -80,7 +80,7 @@ exports.putRecipeBox = async (req: Request, res: Response) => {
   }
 };
 
-exports.deleteRecipeBox = async (req: Request, res: Response) => {
+export const deleteRecipeBox = async (req: Request, res: Response) => {
   try {
     const recipeBoxId = req.params.box;
     const recipeBox = await queries.deleteRecipeBox(recipeBoxId);
@@ -96,7 +96,7 @@ exports.deleteRecipeBox = async (req: Request, res: Response) => {
   }
 };
 
-exports.postRecipe = async (req: Request, res: Response) => {
+export const postRecipe = async (req: Request, res: Response) => {
   try {
     const userId = req.params.user;
     const { name, link, description, has_made, favorite, recipe_box_id } =
@@ -123,10 +123,10 @@ exports.postRecipe = async (req: Request, res: Response) => {
   }
 };
 
-exports.putRecipe = async (req: Request, res: Response) => {
+export const putRecipe = async (req: Request, res: Response) => {
   try {
     const recipeId = req.params.id;
-    const recipe = await queries.updateRecipe(recipeId, req.body);
+    const recipe = await queries.updateRecipe(BigInt(recipeId), req.body);
     return recipe;
   } catch (error) {
     logger(
@@ -139,7 +139,7 @@ exports.putRecipe = async (req: Request, res: Response) => {
   }
 };
 
-exports.deleteRecipe = async (req: Request, res: Response) => {
+export const deleteRecipe = async (req: Request, res: Response) => {
   try {
     const recipeId = req.params.id;
     const recipe = await queries.deleteRecipe(recipeId);
@@ -155,7 +155,7 @@ exports.deleteRecipe = async (req: Request, res: Response) => {
   }
 };
 
-exports.deleteUser = async (req: Request, res: Response) => {
+export const deleteUser = async (req: Request, res: Response) => {
   try {
     const userId = req.params.user;
     const response = await userService.deleteUser(userId);
@@ -171,7 +171,7 @@ exports.deleteUser = async (req: Request, res: Response) => {
   }
 };
 
-exports.createUser = async (req: Request, res: Response) => {
+export const createUser = async (req: Request, res: Response) => {
   try {
     const userId = req.params.user;
     const { name, emoji, color } = req.body;
@@ -188,7 +188,7 @@ exports.createUser = async (req: Request, res: Response) => {
   }
 };
 
-exports.getUser = async (req: Request, res: Response) => {
+export const getUser = async (req: Request, res: Response) => {
   try {
     const userId = req.params.user;
     const response = await queries.getUser(userId);
@@ -204,10 +204,15 @@ exports.getUser = async (req: Request, res: Response) => {
   }
 };
 
-exports.getUserAuth0 = async (req: Request, res: Response) => {
+export const getUserAuth0 = async (req: Request, res: Response) => {
   try {
     const userId = req.params.user;
-    const fields = req.query.fields;
+    const fields = req.query.fields as string;
+    if (!userId || !fields) {
+      throw new Error(
+        "User ID and Auth0 fields must be present when getting the Auth0 data for the user."
+      );
+    }
     const userAuth0 = await userService.getUserAuth0(userId, fields);
     return userAuth0;
   } catch (error) {
@@ -221,7 +226,7 @@ exports.getUserAuth0 = async (req: Request, res: Response) => {
   }
 };
 
-exports.putUser = async (req: Request, res: Response) => {
+export const putUser = async (req: Request, res: Response) => {
   try {
     const userId = req.params.user;
     const user = await queries.updateUser(userId, req.body);

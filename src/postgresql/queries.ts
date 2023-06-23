@@ -12,7 +12,7 @@ const pool = new Pool({
   port: process.env.POSTGRESQL_PORT,
 });
 
-const getPropertiesToUpdate = (propertiesToUpdate: {
+export const getPropertiesToUpdate = (propertiesToUpdate: {
   [property: string]: string;
 }) => {
   let properties = "";
@@ -30,14 +30,14 @@ const getPropertiesToUpdate = (propertiesToUpdate: {
   return properties;
 };
 
-const getAllUserRecipes = async (userId: string) => {
+export const getAllUserRecipes = async (userId: string) => {
   const response = await pool.query("SELECT * FROM recipe WHERE user_id=$1", [
     userId,
   ]);
   return response.rows;
 };
 
-const getAllUserRecipeBoxes = async (userId: string) => {
+export const getAllUserRecipeBoxes = async (userId: string) => {
   const response = await pool.query(
     "SELECT * FROM recipe_box WHERE user_id=$1",
     [userId]
@@ -45,7 +45,7 @@ const getAllUserRecipeBoxes = async (userId: string) => {
   return response.rows;
 };
 
-const createRecipeBox = async (
+export const createRecipeBox = async (
   userId: string,
   name: string,
   description: string,
@@ -59,7 +59,7 @@ const createRecipeBox = async (
   return response.rows;
 };
 
-const updateRecipeBox = async (
+export const updateRecipeBox = async (
   recipe_box_id: BigInt,
   propertiesToUpdate: { [property: string]: string }
 ) => {
@@ -71,7 +71,7 @@ const updateRecipeBox = async (
   return response.rows;
 };
 
-const deleteRecipeBox = async (recipe_box_id: string) => {
+export const deleteRecipeBox = async (recipe_box_id: string) => {
   await pool.query(`DELETE FROM recipe WHERE recipe_box_id=$1`, [
     recipe_box_id,
   ]);
@@ -83,7 +83,7 @@ const deleteRecipeBox = async (recipe_box_id: string) => {
   return response;
 };
 
-const createRecipe = async (
+export const createRecipe = async (
   userId: string,
   name: string,
   link: string,
@@ -100,7 +100,7 @@ const createRecipe = async (
   return response.rows;
 };
 
-const updateRecipe = async (
+export const updateRecipe = async (
   recipe_id: BigInt,
   propertiesToUpdate: { [property: string]: string }
 ) => {
@@ -113,14 +113,14 @@ const updateRecipe = async (
   return response.rows;
 };
 
-const deleteRecipe = async (recipe_id: string) => {
+export const deleteRecipe = async (recipe_id: string) => {
   const response = await pool.query(`DELETE FROM recipe WHERE recipe_id=$1`, [
     recipe_id,
   ]);
   return response;
 };
 
-const deleteUser = async (user_id: string) => {
+export const deleteUser = async (user_id: string) => {
   await pool.query(`DELETE FROM recipe WHERE user_id=$1`, [user_id]);
   await pool.query(`DELETE FROM recipe_box WHERE user_id=$1`, [user_id]);
   const response = await pool.query(`DELETE FROM app_user WHERE user_id=$1`, [
@@ -129,7 +129,7 @@ const deleteUser = async (user_id: string) => {
   return response;
 };
 
-const createUser = async (
+export const createUser = async (
   userId: string,
   name: string,
   emoji: string,
@@ -143,14 +143,14 @@ const createUser = async (
   return response.rows;
 };
 
-const getUser = async (userId: string) => {
+export const getUser = async (userId: string) => {
   const response = await pool.query(`SELECT * FROM app_user WHERE user_id=$1`, [
     userId,
   ]);
   return response.rows;
 };
 
-const updateUser = async (
+export const updateUser = async (
   user_id: string,
   propertiesToUpdate: { [property: string]: string }
 ) => {
@@ -161,19 +161,4 @@ const updateUser = async (
     [user_id]
   );
   return response.rows;
-};
-
-module.exports = {
-  getAllUserRecipes,
-  getAllUserRecipeBoxes,
-  createRecipeBox,
-  updateRecipeBox,
-  deleteRecipeBox,
-  createRecipe,
-  updateRecipe,
-  deleteRecipe,
-  deleteUser,
-  createUser,
-  getUser,
-  updateUser,
 };

@@ -1,9 +1,8 @@
 import express, { Request, Response } from "express";
+import * as userController from "../controllers/userController";
 const router = express.Router();
-const userController = require("../controllers/userController");
 
 // all routes with "/recipe" go here
-
 router.put("/:id", async (req: Request, res: Response) => {
   try {
     const recipe = await userController.putRecipe(req, res);
@@ -21,4 +20,4 @@ router.delete("/:id", async (req: Request, res: Response) => {
   }
 });
 
-module.exports = router;
+export default router;
