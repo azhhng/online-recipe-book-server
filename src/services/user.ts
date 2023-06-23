@@ -31,13 +31,13 @@ export const getToken = async () => {
   }
 };
 
-export const deleteUser = async (user_id: string) => {
+export const deleteUser = async (userSub: string, userId: string) => {
   try {
     // remove from auth0
     const token = await getToken();
     var options = {
       method: "DELETE",
-      url: `${process.env.AUTH0_API_ADDRESS}users/${user_id}`,
+      url: `${process.env.AUTH0_API_ADDRESS}users/${userSub}`,
       headers: {
         "content-type": "application/json",
         authorization: `Bearer ${token}`,
@@ -45,24 +45,24 @@ export const deleteUser = async (user_id: string) => {
     };
     await axios(options);
     // remove from database
-    const response = await queries.deleteUser(user_id);
+    const response = await queries.deleteUser(userId);
     return response;
   } catch (error) {
     logger(
       fileName,
       "deleteUser",
-      `There was an error deleting the user ${user_id} in Auth0.`,
+      `There was an error deleting the user ${userId} in Auth0.`,
       error
     );
     throw error;
   }
 };
 
-export const getUserAuth0 = async (user_id: string, fields: string) => {
+export const getUserAuth0 = async (userId: string, fields: string) => {
   const token = await getToken();
   var options = {
     method: "GET",
-    url: `${process.env.AUTH0_API_ADDRESS}users/${user_id}?fields=${fields}`,
+    url: `${process.env.AUTH0_API_ADDRESS}users/${userId}?fields=${fields}`,
     headers: {
       "content-type": "application/json",
       authorization: `Bearer ${token}`,
@@ -75,7 +75,7 @@ export const getUserAuth0 = async (user_id: string, fields: string) => {
     logger(
       fileName,
       "getUserAuth0",
-      `There was an error getting the user ${user_id} from Auth0.`,
+      `There was an error getting the user ${userId} from Auth0.`,
       error
     );
     throw error;

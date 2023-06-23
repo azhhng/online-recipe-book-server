@@ -5,6 +5,13 @@ import logger from "../logger";
 
 const fileName = "userController.ts";
 
+function splitUserSub(sub: string): string {
+  if (!sub) {
+    return "";
+  }
+  return sub.split("|")[1];
+}
+
 export const createUser = async (req: Request, res: Response) => {
   try {
     const userId = req.params.user;
@@ -56,8 +63,9 @@ export const putUser = async (req: Request, res: Response) => {
 
 export const deleteUser = async (req: Request, res: Response) => {
   try {
-    const userId = req.params.user;
-    const response = await userService.deleteUser(userId);
+    const userSub = req.params.user;
+    const userId = splitUserSub(userSub);
+    const response = await userService.deleteUser(userSub, userId);
     return response;
   } catch (error) {
     logger(
