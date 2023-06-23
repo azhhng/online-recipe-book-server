@@ -1,5 +1,8 @@
 import express, { Request, Response } from "express";
 import * as userController from "../controllers/userController";
+import * as recipeController from "../controllers/recipeController";
+import * as recipeBoxController from "../controllers/recipeBoxController";
+
 const router = express.Router();
 
 // get user information from the database
@@ -57,7 +60,7 @@ router.delete("/:user", async (req: Request, res: Response) => {
 
 router.get("/:user/recipe", async (req: Request, res: Response) => {
   try {
-    const recipes = await userController.getAllUserRecipes(req, res);
+    const recipes = await recipeController.getAllUserRecipes(req, res);
     return res.status(200).json(recipes);
   } catch (error) {
     return res.status(500).json("There was an error getting recipes.");
@@ -66,7 +69,10 @@ router.get("/:user/recipe", async (req: Request, res: Response) => {
 
 router.get("/:user/recipe-box", async (req: Request, res: Response) => {
   try {
-    const recipeBoxes = await userController.getAllUserRecipeBoxes(req, res);
+    const recipeBoxes = await recipeBoxController.getAllUserRecipeBoxes(
+      req,
+      res
+    );
     return res.status(200).json(recipeBoxes);
   } catch (error) {
     return res.status(500).json("There was an error getting recipe boxes.");
@@ -75,7 +81,7 @@ router.get("/:user/recipe-box", async (req: Request, res: Response) => {
 
 router.post("/:user/recipe-box", async (req: Request, res: Response) => {
   try {
-    const recipeBox = await userController.postRecipeBox(req, res);
+    const recipeBox = await recipeBoxController.postRecipeBox(req, res);
     return res.status(201).json(recipeBox);
   } catch (error) {
     return res.status(500).json("There was an error creating a recipe box.");
@@ -84,7 +90,7 @@ router.post("/:user/recipe-box", async (req: Request, res: Response) => {
 
 router.post("/:user/recipe", async (req: Request, res: Response) => {
   try {
-    const recipe = await userController.postRecipe(req, res);
+    const recipe = await recipeController.postRecipe(req, res);
     return res.status(201).json(recipe);
   } catch (error) {
     return res.status(500).json("There was an error adding a recipe.");
