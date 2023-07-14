@@ -22,4 +22,15 @@ router.delete("/:box", async (req: Request, res: Response) => {
   }
 });
 
+router.get("/:box/recipes", async (req: Request, res: Response) => {
+  try {
+    const recipes = await recipeBoxController.getRecipeBoxRecipes(req, res);
+    return res.status(200).json(recipes);
+  } catch (error) {
+    return res
+      .status(500)
+      .json("There was an error getting recipe box recipes.");
+  }
+});
+
 export default router;

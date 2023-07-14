@@ -77,3 +77,19 @@ export const deleteRecipeBox = async (req: Request, res: Response) => {
     throw error;
   }
 };
+
+export const getRecipeBoxRecipes = async (req: Request, res: Response) => {
+  try {
+    const recipeBoxId = req.params.box;
+    const recipes = await queries.getRecipeBoxRecipes(recipeBoxId);
+    return recipes;
+  } catch (error) {
+    logger(
+      fileName,
+      "getRecipeBoxRecipes",
+      `There was an error getting all the recipes for recipe box ${req.params.box}.`,
+      error
+    );
+    throw error;
+  }
+};

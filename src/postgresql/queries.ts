@@ -45,6 +45,14 @@ export const getAllUserRecipeBoxes = async (userId: string) => {
   return response.rows;
 };
 
+export const getRecipeBoxRecipes = async (recipe_box_id: string) => {
+  const response = await pool.query(
+    "SELECT * FROM recipe WHERE recipe_box_id=$1",
+    [recipe_box_id]
+  );
+  return response.rows;
+};
+
 export const createRecipeBox = async (
   userId: string,
   name: string,
