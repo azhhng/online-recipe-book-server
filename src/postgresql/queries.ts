@@ -67,6 +67,14 @@ export const createRecipeBox = async (
   return response.rows;
 };
 
+export const getRecipeBox = async (recipe_box_id: string) => {
+  const response = await pool.query(
+    "SELECT * FROM recipe_box WHERE recipe_box_id=$1 LIMIT 1",
+    [recipe_box_id]
+  );
+  return response.rows;
+};
+
 export const updateRecipeBox = async (
   recipe_box_id: BigInt,
   propertiesToUpdate: { [property: string]: string }
@@ -152,9 +160,10 @@ export const createUser = async (
 };
 
 export const getUser = async (userId: string) => {
-  const response = await pool.query(`SELECT * FROM app_user WHERE user_id=$1`, [
-    userId,
-  ]);
+  const response = await pool.query(
+    `SELECT * FROM app_user WHERE user_id=$1 LIMIT 1`,
+    [userId]
+  );
   return response.rows;
 };
 

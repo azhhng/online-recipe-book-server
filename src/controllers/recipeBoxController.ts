@@ -45,6 +45,22 @@ export const postRecipeBox = async (req: Request, res: Response) => {
   }
 };
 
+export const getRecipeBox = async (req: Request, res: Response) => {
+  try {
+    const recipeBoxId = req.params.box;
+    const recipeBox = await queries.getRecipeBox(recipeBoxId);
+    return recipeBox;
+  } catch (error) {
+    logger(
+      fileName,
+      "getRecipeBox",
+      `There was an error getting the recipe box ${req.params.box}.`,
+      error
+    );
+    throw error;
+  }
+};
+
 export const putRecipeBox = async (req: Request, res: Response) => {
   try {
     const recipeBoxId = req.params.box;

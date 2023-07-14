@@ -13,6 +13,15 @@ router.put("/:box", async (req: Request, res: Response) => {
   }
 });
 
+router.get("/:box", async (req: Request, res: Response) => {
+  try {
+    const recipeBox = await recipeBoxController.getRecipeBox(req, res);
+    return res.status(200).json(recipeBox);
+  } catch (error) {
+    return res.status(500).json("There was an error getting the recipe box.");
+  }
+});
+
 router.delete("/:box", async (req: Request, res: Response) => {
   try {
     const recipeBox = await recipeBoxController.deleteRecipeBox(req, res);
