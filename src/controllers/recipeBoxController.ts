@@ -2,6 +2,7 @@ import * as queries from "../postgresql/queries";
 import { Request, Response } from "express";
 import logger from "../logger";
 import { validateRecipeBoxBody } from "../validations/recipeBox";
+import { validateAccessToken } from "../validations/validateAccessToken";
 
 const fileName = "userController.ts";
 
@@ -23,6 +24,7 @@ export const getAllUserRecipeBoxes = async (req: Request, res: Response) => {
 
 export const postRecipeBox = async (req: Request, res: Response) => {
   try {
+    await validateAccessToken(String(req.headers.authorization));
     const userId = req.params.user;
     const { name, description, emoji, color } = req.body;
     validateRecipeBoxBody(name, emoji, color);
@@ -63,6 +65,7 @@ export const getRecipeBox = async (req: Request, res: Response) => {
 
 export const putRecipeBox = async (req: Request, res: Response) => {
   try {
+    await validateAccessToken(String(req.headers.authorization));
     const recipeBoxId = req.params.box;
     const box = req.body;
     const recipeBox = await queries.updateRecipeBox(BigInt(recipeBoxId), box);
@@ -80,6 +83,7 @@ export const putRecipeBox = async (req: Request, res: Response) => {
 
 export const deleteRecipeBox = async (req: Request, res: Response) => {
   try {
+    await validateAccessToken(String(req.headers.authorization));
     const recipeBoxId = req.params.box;
     const recipeBox = await queries.deleteRecipeBox(recipeBoxId);
     return recipeBox;

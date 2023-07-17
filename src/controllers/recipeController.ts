@@ -2,6 +2,7 @@ import * as queries from "../postgresql/queries";
 import { Request, Response } from "express";
 import logger from "../logger";
 import { validateRecipeBody } from "../validations/recipe";
+import { validateAccessToken } from "../validations/validateAccessToken";
 
 const fileName = "userController.ts";
 
@@ -23,6 +24,7 @@ export const getAllUserRecipes = async (req: Request, res: Response) => {
 
 export const postRecipe = async (req: Request, res: Response) => {
   try {
+    await validateAccessToken(String(req.headers.authorization));
     const userId = req.params.user;
     const { name, link, description, has_made, favorite, recipe_box_id } =
       req.body;
@@ -50,6 +52,7 @@ export const postRecipe = async (req: Request, res: Response) => {
 
 export const putRecipe = async (req: Request, res: Response) => {
   try {
+    await validateAccessToken(String(req.headers.authorization));
     const recipeId = req.params.id;
     const recipe = await queries.updateRecipe(BigInt(recipeId), req.body);
     return recipe;
@@ -66,6 +69,7 @@ export const putRecipe = async (req: Request, res: Response) => {
 
 export const deleteRecipe = async (req: Request, res: Response) => {
   try {
+    await validateAccessToken(String(req.headers.authorization));
     const recipeId = req.params.id;
     const recipe = await queries.deleteRecipe(recipeId);
     return recipe;

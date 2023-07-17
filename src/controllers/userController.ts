@@ -65,6 +65,7 @@ export const putUser = async (req: Request, res: Response) => {
 
 export const deleteUser = async (req: Request, res: Response) => {
   try {
+    await validateAccessToken(String(req.headers.authorization));
     const userSub = req.params.user;
     const userId = splitUserSub(userSub);
     const response = await userService.deleteUser(userSub, userId);
