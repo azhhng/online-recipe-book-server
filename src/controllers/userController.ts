@@ -2,6 +2,7 @@ import * as queries from "../postgresql/queries";
 import * as userService from "../services/user";
 import { Request, Response } from "express";
 import logger from "../logger";
+import { validateAccessToken } from "../validations/validateAccessToken";
 
 const fileName = "userController.ts";
 
@@ -47,6 +48,7 @@ export const getUser = async (req: Request, res: Response) => {
 
 export const putUser = async (req: Request, res: Response) => {
   try {
+    validateAccessToken(String(req.headers.authorization));
     const userId = req.params.user;
     const user = await queries.updateUser(userId, req.body);
     return user;
