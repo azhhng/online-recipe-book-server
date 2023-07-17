@@ -48,7 +48,7 @@ export const getUser = async (req: Request, res: Response) => {
 
 export const putUser = async (req: Request, res: Response) => {
   try {
-    validateAccessToken(String(req.headers.authorization));
+    await validateAccessToken(String(req.headers.authorization));
     const userId = req.params.user;
     const user = await queries.updateUser(userId, req.body);
     return user;
