@@ -29,8 +29,14 @@ const getKey = async (kid: string): Promise<string> => {
 const validateAccessToken = async (tokenHeader: string): Promise<void> => {
   try {
     const token = tokenHeader.replace("Bearer ", "");
+    console.log("TOKEN ===========");
+    console.log(token);
     const decoded = jwt.decode(token, { complete: true });
+    console.log("DECODED ===========");
+    console.log(token);
     const kid = String(decoded?.header.kid);
+    console.log("KID ===========");
+    console.log(token);
     const publicKey = await getKey(kid);
     jwt.verify(token, publicKey, { algorithms: ["RS256"] });
   } catch (error) {
