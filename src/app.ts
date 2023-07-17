@@ -1,4 +1,4 @@
-import express, { Application, Request, Response } from "express";
+import express, { Application, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import * as dotenv from "dotenv";
 import userRouter from "./routes/user";
@@ -10,8 +10,8 @@ const app: Application = express();
 dotenv.config();
 
 // configure cors
-var whitelist = ["https://recipeboxd.vercel.app", "http://localhost:3000"];
-var corsOptions = {
+const whitelist = ["https://recipeboxd.vercel.app", "http://localhost:3000"];
+const corsOptions = {
   origin: function (origin: any, callback: any) {
     if (whitelist.indexOf(origin) !== -1) {
       callback(null, true);
@@ -22,6 +22,7 @@ var corsOptions = {
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
   preflightContinue: true,
 };
+
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 
