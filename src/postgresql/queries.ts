@@ -47,7 +47,14 @@ export const getAllUserRecipeBoxes = async (userId: string) => {
 
 export const getAllVerifiedUsersRecipeBoxes = async () => {
   const response = await pool.query(
-    "SELECT * FROM recipe_box, app_user WHERE app_user.verified = true;"
+    "SELECT * FROM recipe_box JOIN app_user ON recipe_box.user_id = app_user.user_id WHERE app_user.verified = true;"
+  );
+  return response.rows;
+};
+
+export const getAllVerifiedUsersRecipes = async () => {
+  const response = await pool.query(
+    "SELECT * FROM recipe JOIN recipe_box ON recipe.recipe_box_id = recipe_box.recipe_box_id JOIN app_user ON recipe_box.user_id = app_user.user_id WHERE recipe_box.is_public=true AND app_user.verified = true;"
   );
   return response.rows;
 };
