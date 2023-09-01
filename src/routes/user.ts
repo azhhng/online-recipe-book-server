@@ -5,6 +5,8 @@ import * as recipeBoxController from "../controllers/recipeBoxController";
 
 const router = express.Router();
 
+// all routes with "/user" go here
+
 // get user information from the database
 router.get("/:user", async (req: Request, res: Response) => {
   try {
