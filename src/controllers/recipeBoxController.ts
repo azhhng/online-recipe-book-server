@@ -22,6 +22,24 @@ export const getAllUserRecipeBoxes = async (req: Request, res: Response) => {
   }
 };
 
+export const getAllVerifiedUsersRecipeBoxes = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const recipeBoxes = await queries.getAllVerifiedUsersRecipeBoxes();
+    return recipeBoxes;
+  } catch (error) {
+    logger(
+      fileName,
+      "getAllVerifiedUsersRecipeBoxes",
+      `There was an error getting all verified users' recipe boxes.`,
+      error
+    );
+    throw error;
+  }
+};
+
 export const postRecipeBox = async (req: Request, res: Response) => {
   try {
     await validateAccessToken(String(req.headers.authorization));

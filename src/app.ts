@@ -4,6 +4,7 @@ import * as dotenv from "dotenv";
 import userRouter from "./routes/user";
 import recipeBoxRouter from "./routes/recipeBox";
 import recipeRouter from "./routes/recipe";
+import verifiedRouter from "./routes/verified";
 const app: Application = express();
 
 // configure .env variables
@@ -32,6 +33,7 @@ app.use(express.json());
 app.use("/user", userRouter);
 app.use("/recipe-box", recipeBoxRouter);
 app.use("/recipe", recipeRouter);
+app.use("/verified-user", verifiedRouter);
 
 app.use("/", (req: Request, res: Response): void => {
   res.send("The online-recipe-book API is connected.");

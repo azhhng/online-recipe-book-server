@@ -45,6 +45,13 @@ export const getAllUserRecipeBoxes = async (userId: string) => {
   return response.rows;
 };
 
+export const getAllVerifiedUsersRecipeBoxes = async () => {
+  const response = await pool.query(
+    "SELECT * FROM recipe_box, app_user WHERE app_user.verified = true;"
+  );
+  return response.rows;
+};
+
 export const getRecipeBoxRecipes = async (recipe_box_id: string) => {
   const response = await pool.query(
     "SELECT * FROM recipe WHERE recipe_box_id=$1",
