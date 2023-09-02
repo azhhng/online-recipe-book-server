@@ -2,7 +2,6 @@ import * as queries from "../postgresql/queries";
 import * as userService from "../services/user";
 import { Request, Response } from "express";
 import logger from "../logger";
-import { validateAccessToken } from "../validations/validateAccessToken";
 
 const fileName = "userController.ts";
 
@@ -48,7 +47,6 @@ export const getUser = async (req: Request, res: Response) => {
 
 export const putUser = async (req: Request, res: Response) => {
   try {
-    await validateAccessToken(String(req.headers.authorization));
     const userId = req.params.user;
     const user = await queries.updateUser(userId, req.body);
     return user;
@@ -65,7 +63,6 @@ export const putUser = async (req: Request, res: Response) => {
 
 export const deleteUser = async (req: Request, res: Response) => {
   try {
-    await validateAccessToken(String(req.headers.authorization));
     const userSub = req.params.user;
     const userId = splitUserSub(userSub);
     const response = await userService.deleteUser(userSub, userId);
@@ -97,6 +94,36 @@ export const getUserAuth0 = async (req: Request, res: Response) => {
       fileName,
       "getUserAuth0",
       `There was an error getting the user ${req.params.user}'s information from Auth0.`,
+      error
+    );
+    throw error;
+  }
+};
+
+export const getUserFromRecipeBox = async (recipeBoxId: BigInt) => {
+  try {
+    const userId = await queries.getUserFromRecipeBox(recipeBoxId);
+    return userId[0].user_id;
+  } catch (error) {
+    logger(
+      fileName,
+      "getUserFromRecipeBox",
+      `There was an error getting the user_id from the recipe box ${recipeBoxId}.`,
+      error
+    );
+    throw error;
+  }
+};
+
+export const getUserFromRecipe = async (recipeId: BigInt) => {
+  try {
+    const userId = await queries.getUserFromRecipe(recipeId);
+    return userId[0].user_id;
+  } catch (error) {
+    logger(
+      fileName,
+      "getUserFromRecipe",
+      `There was an error getting the user_id from the recipe ${recipeId}.`,
       error
     );
     throw error;

@@ -1,8 +1,9 @@
 import * as queries from "../postgresql/queries";
+import * as userTransactionController from "./userTransactionController";
+import * as userController from "./userController";
 import { Request, Response } from "express";
 import logger from "../logger";
 import { validateRecipeBoxBody } from "../validations/recipeBox";
-import { validateAccessToken } from "../validations/validateAccessToken";
 
 const fileName = "userController.ts";
 
@@ -42,7 +43,6 @@ export const getAllVerifiedUsersRecipeBoxes = async (
 
 export const postRecipeBox = async (req: Request, res: Response) => {
   try {
-    await validateAccessToken(String(req.headers.authorization));
     const userId = req.params.user;
     const { name, description, emoji, color } = req.body;
     validateRecipeBoxBody(name, emoji, color);
@@ -52,6 +52,11 @@ export const postRecipeBox = async (req: Request, res: Response) => {
       description,
       emoji,
       color
+    );
+    await userTransactionController.createUserTransactionRecipeBox(
+      userId,
+      recipeBox[0].recipe_box_id,
+      "create"
     );
     return recipeBox;
   } catch (error) {
@@ -83,10 +88,15 @@ export const getRecipeBox = async (req: Request, res: Response) => {
 
 export const putRecipeBox = async (req: Request, res: Response) => {
   try {
-    await validateAccessToken(String(req.headers.authorization));
-    const recipeBoxId = req.params.box;
+    const recipeBoxId = BigInt(req.params.box);
     const box = req.body;
-    const recipeBox = await queries.updateRecipeBox(BigInt(recipeBoxId), box);
+    const recipeBox = await queries.updateRecipeBox(recipeBoxId, box);
+    const userId = await userController.getUserFromRecipeBox(recipeBoxId);
+    await userTransactionController.createUserTransactionRecipeBox(
+      userId,
+      recipeBoxId,
+      "update"
+    );
     return recipeBox;
   } catch (error) {
     logger(
@@ -101,9 +111,14 @@ export const putRecipeBox = async (req: Request, res: Response) => {
 
 export const deleteRecipeBox = async (req: Request, res: Response) => {
   try {
-    await validateAccessToken(String(req.headers.authorization));
-    const recipeBoxId = req.params.box;
+    const recipeBoxId = BigInt(req.params.box);
     const recipeBox = await queries.deleteRecipeBox(recipeBoxId);
+    const userId = await userController.getUserFromRecipeBox(recipeBoxId);
+    await userTransactionController.createUserTransactionRecipeBox(
+      userId,
+      recipeBox[0].recipe_box_id,
+      "delete"
+    );
     return recipeBox;
   } catch (error) {
     logger(
@@ -126,6 +141,21 @@ export const getRecipeBoxRecipes = async (req: Request, res: Response) => {
       fileName,
       "getRecipeBoxRecipes",
       `There was an error getting all the recipes for recipe box ${req.params.box}.`,
+      error
+    );
+    throw error;
+  }
+};
+
+export const getRecipeBoxFromRecipe = async (recipeId: BigInt) => {
+  try {
+    const recipeBox = await queries.getRecipeBoxFromRecipe(recipeId);
+    return recipeBox[0].recipe_box_id;
+  } catch (error) {
+    logger(
+      fileName,
+      "getRecipeBoxFromRecipe",
+      `There was an error getting the recipe box for recipe ${recipeId}.`,
       error
     );
     throw error;
