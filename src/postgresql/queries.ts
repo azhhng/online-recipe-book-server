@@ -31,15 +31,16 @@ export const getPropertiesToUpdate = (propertiesToUpdate: {
 };
 
 export const getAllUserRecipes = async (userId: string) => {
-  const response = await pool.query("SELECT * FROM recipe WHERE user_id=$1", [
-    userId,
-  ]);
+  const response = await pool.query(
+    "SELECT * FROM recipe WHERE user_id=$1 AND is_active=true",
+    [userId]
+  );
   return response.rows;
 };
 
 export const getAllUserRecipeBoxes = async (userId: string) => {
   const response = await pool.query(
-    "SELECT * FROM recipe_box WHERE user_id=$1",
+    "SELECT * FROM recipe_box WHERE user_id=$1 AND is_active=true",
     [userId]
   );
   return response.rows;
@@ -47,21 +48,21 @@ export const getAllUserRecipeBoxes = async (userId: string) => {
 
 export const getAllVerifiedUsersRecipeBoxes = async () => {
   const response = await pool.query(
-    "SELECT * FROM recipe_box JOIN app_user ON recipe_box.user_id = app_user.user_id WHERE app_user.verified = true;"
+    "SELECT * FROM recipe_box JOIN app_user ON recipe_box.user_id = app_user.user_id WHERE app_user.verified = true AND recipe_box.is_active=true;"
   );
   return response.rows;
 };
 
 export const getAllVerifiedUsersRecipes = async () => {
   const response = await pool.query(
-    "SELECT * FROM recipe JOIN recipe_box ON recipe.recipe_box_id = recipe_box.recipe_box_id JOIN app_user ON recipe_box.user_id = app_user.user_id WHERE recipe_box.is_public=true AND app_user.verified = true;"
+    "SELECT * FROM recipe JOIN recipe_box ON recipe.recipe_box_id = recipe_box.recipe_box_id JOIN app_user ON recipe_box.user_id = app_user.user_id WHERE recipe_box.is_public=true AND app_user.verified = true AND recipe.is_active=true;"
   );
   return response.rows;
 };
 
 export const getRecipeBoxRecipes = async (recipe_box_id: string) => {
   const response = await pool.query(
-    "SELECT * FROM recipe WHERE recipe_box_id=$1",
+    "SELECT * FROM recipe WHERE recipe_box_id=$1 AND is_active=true",
     [recipe_box_id]
   );
   return response.rows;
@@ -101,13 +102,13 @@ export const updateRecipeBox = async (
   return response.rows;
 };
 
-export const deleteRecipeBox = async (recipe_box_id: string) => {
-  await pool.query(`DELETE FROM recipe WHERE recipe_box_id=$1`, [
+export const deleteRecipeBox = async (recipe_box_id: BigInt) => {
+  await pool.query(`UPDATE recipe SET is_active=false WHERE recipe_box_id=$1`, [
     recipe_box_id,
   ]);
 
   const response = await pool.query(
-    `DELETE FROM recipe_box WHERE recipe_box_id=$1`,
+    `UPDATE recipe_box SET is_active=false WHERE recipe_box_id=$1`,
     [recipe_box_id]
   );
   return response;
@@ -143,10 +144,11 @@ export const updateRecipe = async (
   return response.rows;
 };
 
-export const deleteRecipe = async (recipe_id: string) => {
-  const response = await pool.query(`DELETE FROM recipe WHERE recipe_id=$1`, [
-    recipe_id,
-  ]);
+export const deleteRecipe = async (recipe_id: BigInt) => {
+  const response = await pool.query(
+    `UPDATE recipe SET is_active=false WHERE recipe_id=$1`,
+    [recipe_id]
+  );
   return response;
 };
 
@@ -177,6 +179,30 @@ export const getUser = async (userId: string) => {
   const response = await pool.query(
     `SELECT * FROM app_user WHERE user_id=$1 LIMIT 1`,
     [userId]
+  );
+  return response.rows;
+};
+
+export const getUserFromRecipeBox = async (recipeBoxId: BigInt) => {
+  const response = await pool.query(
+    `SELECT user_id FROM recipe_box WHERE recipe_box_id=$1 LIMIT 1`,
+    [recipeBoxId]
+  );
+  return response.rows;
+};
+
+export const getUserFromRecipe = async (recipeId: BigInt) => {
+  const response = await pool.query(
+    `SELECT user_id FROM recipe WHERE recipe_id=$1 LIMIT 1`,
+    [recipeId]
+  );
+  return response.rows;
+};
+
+export const getRecipeBoxFromRecipe = async (recipeId: BigInt) => {
+  const response = await pool.query(
+    `SELECT recipe_box_id FROM recipe WHERE recipe_id=$1 LIMIT 1`,
+    [recipeId]
   );
   return response.rows;
 };
