@@ -1,6 +1,6 @@
 // handle auth0
 const axios = require("axios").default;
-import * as queries from "../postgresql/queries";
+import * as userQueries from "../postgresql/userQueries";
 import logger from "../logger";
 
 const fileName = "user.ts";
@@ -45,7 +45,7 @@ export const deleteUser = async (userSub: string, userId: string) => {
     };
     await axios(options);
     // remove from database
-    const response = await queries.deleteUser(userId);
+    const response = await userQueries.deleteUser(userId);
     return response;
   } catch (error) {
     logger(

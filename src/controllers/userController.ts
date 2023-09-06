@@ -1,4 +1,4 @@
-import * as queries from "../postgresql/queries";
+import * as userQueries from "../postgresql/userQueries";
 import * as userService from "../services/user";
 import { Request, Response } from "express";
 import logger from "../logger";
@@ -16,7 +16,7 @@ export const createUser = async (req: Request, res: Response) => {
   try {
     const userId = req.params.user;
     const { name, emoji, color } = req.body;
-    const user = await queries.createUser(userId, name, emoji, color);
+    const user = await userQueries.createUser(userId, name, emoji, color);
     return user;
   } catch (error) {
     logger(
@@ -32,7 +32,7 @@ export const createUser = async (req: Request, res: Response) => {
 export const getUser = async (req: Request, res: Response) => {
   try {
     const userId = req.params.user;
-    const response = await queries.getUser(userId);
+    const response = await userQueries.getUser(userId);
     return response;
   } catch (error) {
     logger(
@@ -48,7 +48,7 @@ export const getUser = async (req: Request, res: Response) => {
 export const putUser = async (req: Request, res: Response) => {
   try {
     const userId = req.params.user;
-    const user = await queries.updateUser(userId, req.body);
+    const user = await userQueries.updateUser(userId, req.body);
     return user;
   } catch (error) {
     logger(
@@ -102,7 +102,7 @@ export const getUserAuth0 = async (req: Request, res: Response) => {
 
 export const getUserFromRecipeBox = async (recipeBoxId: BigInt) => {
   try {
-    const userId = await queries.getUserFromRecipeBox(recipeBoxId);
+    const userId = await userQueries.getUserFromRecipeBox(recipeBoxId);
     return userId[0].user_id;
   } catch (error) {
     logger(
@@ -117,7 +117,7 @@ export const getUserFromRecipeBox = async (recipeBoxId: BigInt) => {
 
 export const getUserFromRecipe = async (recipeId: BigInt) => {
   try {
-    const userId = await queries.getUserFromRecipe(recipeId);
+    const userId = await userQueries.getUserFromRecipe(recipeId);
     return userId[0].user_id;
   } catch (error) {
     logger(
