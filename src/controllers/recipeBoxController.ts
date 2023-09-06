@@ -90,8 +90,10 @@ export const putRecipeBox = async (req: Request, res: Response) => {
   try {
     const recipeBoxId = BigInt(req.params.box);
     const box = req.body;
-    const recipeBox = await queries.updateRecipeBox(recipeBoxId, box);
-    const userId = await userController.getUserFromRecipeBox(recipeBoxId);
+    const [recipeBox, userId] = await Promise.all([
+      queries.updateRecipeBox(recipeBoxId, box),
+      userController.getUserFromRecipeBox(recipeBoxId),
+    ]);
     await userTransactionController.createUserTransactionRecipeBox(
       userId,
       recipeBoxId,
@@ -112,8 +114,10 @@ export const putRecipeBox = async (req: Request, res: Response) => {
 export const deleteRecipeBox = async (req: Request, res: Response) => {
   try {
     const recipeBoxId = BigInt(req.params.box);
-    const recipeBox = await queries.deleteRecipeBox(recipeBoxId);
-    const userId = await userController.getUserFromRecipeBox(recipeBoxId);
+    const [recipeBox, userId] = await Promise.all([
+      queries.deleteRecipeBox(recipeBoxId),
+      userController.getUserFromRecipeBox(recipeBoxId),
+    ]);
     await userTransactionController.createUserTransactionRecipeBox(
       userId,
       recipeBox[0].recipe_box_id,

@@ -78,11 +78,11 @@ export const postRecipe = async (req: Request, res: Response) => {
 export const putRecipe = async (req: Request, res: Response) => {
   try {
     const recipeId = BigInt(req.params.id);
-    const recipe = await queries.updateRecipe(recipeId, req.body);
-    const userId = await userController.getUserFromRecipe(recipeId);
-    const recipeBoxId = await recipeBoxController.getRecipeBoxFromRecipe(
-      recipeId
-    );
+    const [recipe, userId, recipeBoxId] = await Promise.all([
+      queries.updateRecipe(recipeId, req.body),
+      userController.getUserFromRecipe(recipeId),
+      recipeBoxController.getRecipeBoxFromRecipe(recipeId),
+    ]);
     await userTransactionController.createUserTransactionRecipe(
       userId,
       recipeBoxId,
@@ -104,11 +104,11 @@ export const putRecipe = async (req: Request, res: Response) => {
 export const deleteRecipe = async (req: Request, res: Response) => {
   try {
     const recipeId = BigInt(req.params.id);
-    const recipe = await queries.deleteRecipe(recipeId);
-    const userId = await userController.getUserFromRecipe(recipeId);
-    const recipeBoxId = await recipeBoxController.getRecipeBoxFromRecipe(
-      recipeId
-    );
+    const [recipe, userId, recipeBoxId] = await Promise.all([
+      queries.deleteRecipe(recipeId),
+      userController.getUserFromRecipe(recipeId),
+      recipeBoxController.getRecipeBoxFromRecipe(recipeId),
+    ]);
     await userTransactionController.createUserTransactionRecipe(
       userId,
       recipeBoxId,
